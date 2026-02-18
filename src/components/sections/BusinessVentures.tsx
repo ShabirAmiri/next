@@ -95,11 +95,11 @@ export default function BusinessVentures() {
 
       if (isScrolling) return;
 
-      // Accumulate wheel delta
+      // Accumulate wheel delta with higher threshold
       wheelDelta.current += Math.abs(e.deltaY);
 
-      // Only trigger after accumulating enough scroll (200 pixels)
-      if (wheelDelta.current > 100) {
+      // Only trigger after accumulating enough scroll (500 pixels for slower response)
+      if (wheelDelta.current > 500) {
         isScrolling = true;
         wheelDelta.current = 0;
 
@@ -112,7 +112,7 @@ export default function BusinessVentures() {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           isScrolling = false;
-        }, 800);
+        }, 1000);
       }
     };
 
@@ -142,7 +142,7 @@ export default function BusinessVentures() {
         return; // Let browser handle
       }
 
-      if (Math.abs(diff) > 100 && !isScrolling) {
+      if (Math.abs(diff) > 150 && !isScrolling) {
         isScrolling = true;
 
         e.preventDefault();
@@ -156,7 +156,7 @@ export default function BusinessVentures() {
         clearTimeout(scrollTimeout);
         scrollTimeout = setTimeout(() => {
           isScrolling = false;
-        }, 800);
+        }, 1000);
       }
     };
 
@@ -190,50 +190,54 @@ export default function BusinessVentures() {
       ref={sectionRef}
       className="relative h-screen bg-black overflow-hidden"
     >
-      {/* Slide Number in Top Right - Proper spacing */}
-      <div className="absolute top-6 sm:top-8 md:top-10 right-4 sm:right-6 md:right-8 lg:right-10 z-20">
-        <span className="text-xs sm:text-sm md:text-base tracking-[0.3em] text-white/40 font-light">
+      {/* Slide Number in Top Right */}
+      <div className="absolute top-4 sm:top-6 md:top-8 right-4 sm:right-6 md:right-8 z-20">
+        <span className="text-[10px] sm:text-xs md:text-sm tracking-[0.3em] text-white/40 font-light font-['Inter']">
           {String(activeIndex + 1).padStart(2, "0")} /{" "}
           {String(ventures.length).padStart(2, "0")}
         </span>
       </div>
 
-      {/* Section Title - Centered with proper spacing */}
-      <div className="absolute top-6 sm:top-8 md:top-10 left-1/2 -translate-x-1/2 z-20 text-center w-full px-4 sm:px-6">
-        <span className="text-[8px] sm:text-[10px] md:text-xs tracking-[0.3em] text-white/40 uppercase block mb-1 sm:mb-2">
-          Building Excellence
-        </span>
-        <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-light text-white">
-          Business Ventures
+      {/* Section Title - Clean and minimal */}
+      <div className="absolute top-4 sm:top-6 md:top-8 left-1/2 -translate-x-1/2 z-20 text-center w-full px-4">
+        <h2 className="font-['Inter'] text-white/20 text-[8px] sm:text-[10px] md:text-xs tracking-[0.4em] uppercase font-light">
+          ENTERPRISES
         </h2>
-        <div className="h-px bg-gradient-to-r from-transparent via-white/40 to-transparent w-16 sm:w-20 md:w-24 lg:w-32 mx-auto mt-1 sm:mt-2 md:mt-3" />
       </div>
 
-      {/* Dot Navigation - Properly spaced from edges */}
-      <div className="absolute right-3 sm:right-4 md:right-6 lg:right-8 top-1/2 -translate-y-1/2 z-20 flex flex-col gap-2 sm:gap-3 md:gap-4">
+      {/* Elegant Line Navigation on Left Side */}
+      <div className="absolute left-3 sm:left-4 md:left-6 lg:left-8 top-1/2 -translate-y-1/2 z-20 flex flex-col items-center gap-3 sm:gap-4 md:gap-5">
         {ventures.map((_, index) => (
           <button
             key={index}
             onClick={() => goToSlide(index)}
-            className="group relative"
+            className="group relative flex items-center"
             aria-label={`Go to slide ${index + 1}`}
           >
+            {/* Line indicator */}
             <div
-              className={`w-1 sm:w-1.5 md:w-2 h-1 sm:h-1.5 md:h-2 rounded-full transition-all duration-300 ${
+              className={`w-0.5 transition-all duration-500 ${
                 index === activeIndex
-                  ? "bg-white scale-125"
-                  : "bg-white/20 hover:bg-white/40"
+                  ? "bg-white h-6 sm:h-7 md:h-8"
+                  : "bg-white/20 group-hover:bg-white/40 h-4 sm:h-5 md:h-6"
               }`}
             />
-            <span className="absolute right-full mr-2 sm:mr-3 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-[8px] sm:text-[10px] md:text-xs text-white/60 whitespace-nowrap">
-              {index + 1}
+
+            {/* Number that appears on hover */}
+            <span className="absolute left-full ml-2 sm:ml-3 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-[8px] sm:text-[10px] md:text-xs text-white/40 font-['Inter'] tracking-wider">
+              {String(index + 1).padStart(2, "0")}
             </span>
           </button>
         ))}
+
+        {/* Small label at bottom */}
+        <span className="text-[6px] sm:text-[7px] md:text-[8px] text-white/20 font-['Inter'] tracking-[0.3em] uppercase mt-1 sm:mt-2 rotate-90">
+          EXPLORE
+        </span>
       </div>
 
-      {/* Arrow Buttons - Properly spaced from bottom and right */}
-      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-20 hidden md:flex gap-2 md:gap-3">
+      {/* Arrow Buttons */}
+      <div className="absolute bottom-4 sm:bottom-6 md:bottom-8 right-4 sm:right-6 md:right-8 z-20 hidden md:flex gap-2 sm:gap-3">
         <button
           onClick={prevSlide}
           disabled={activeIndex === 0}
@@ -335,52 +339,64 @@ function VentureSlide({ venture, isActive, index }: VentureSlideProps) {
         />
 
         <div className="container mx-auto px-4 sm:px-6 md:px-8 lg:px-12 xl:px-16 h-full">
-          <div className="flex flex-col items-center justify-center h-full max-w-3xl mx-auto text-center md:text-left md:grid md:grid-cols-2 md:gap-6 lg:gap-8 xl:gap-12 md:items-center md:text-left md:max-w-6xl">
-            {/* Left Content - Centered on mobile, left on desktop */}
+          <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12 items-center justify-center h-full max-w-7xl mx-auto">
+            {/* Left Content */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={isActive ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="relative z-10 mb-6 sm:mb-8 md:mb-0 px-2 sm:px-4 md:px-0"
+              className="relative z-10 w-full max-w-xl lg:pr-4 xl:pr-8"
             >
-              <span
-                className="text-[8px] sm:text-[10px] md:text-xs tracking-[0.3em] uppercase block mb-2 sm:mb-3"
-                style={{ color: venture.themeColor }}
-              >
-                {venture.sector} · Est. {venture.established}
-              </span>
+              {/* Sector - Clean and minimal */}
+              <div className="mb-2 sm:mb-3">
+                <span
+                  className="font-['Inter'] text-[10px] sm:text-xs tracking-[0.2em] uppercase block font-light"
+                  style={{ color: venture.themeColor }}
+                >
+                  {venture.sector}
+                </span>
+                <span className="font-['Inter'] text-[8px] sm:text-[10px] text-white/30 tracking-wider uppercase">
+                  Est. {venture.established}
+                </span>
+              </div>
 
-              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-light text-white mb-2 sm:mb-3 md:mb-4 leading-tight max-w-xl mx-auto md:mx-0">
+              {/* Title - Clean and professional */}
+              <h2 className="font-['Inter'] text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl text-white mb-2 sm:mb-3 md:mb-4 leading-tight font-light max-w-lg">
                 {venture.title}
               </h2>
 
-              <div className="max-w-md mx-auto md:mx-0 mb-3 sm:mb-4 md:mb-6">
-                <p className="text-xs sm:text-sm md:text-base text-white/60 leading-relaxed">
+              {/* Description - Inter for readability */}
+              <div className="mb-3 sm:mb-4">
+                <p className="font-['Inter'] text-xs sm:text-sm md:text-base text-white/70 leading-relaxed max-w-prose">
                   {venture.description}
                 </p>
               </div>
 
-              <div className="mb-3 sm:mb-4 md:mb-6">
-                <span className="text-[8px] sm:text-[10px] md:text-xs text-white/40 font-mono">
+              {/* Stats - Clean monospace */}
+              <div className="mb-4 sm:mb-5 md:mb-6">
+                <span className="font-['Inter'] text-[10px] sm:text-xs text-white/40 tracking-wide">
                   {venture.stats}
                 </span>
               </div>
 
+              {/* Learn More - Clean with arrow */}
               <div>
                 <Link
                   href={`/ventures/${venture.id}`}
-                  className="inline-flex items-center text-xs sm:text-sm md:text-base text-white/60 hover:text-white transition-colors duration-300 group"
+                  className="group inline-flex items-center gap-1 sm:gap-2 transition-colors duration-300"
                   style={{ color: venture.themeColor }}
                 >
-                  <span>Learn More</span>
-                  <span className="ml-1 sm:ml-2 transform group-hover:translate-x-1 transition-transform duration-300">
+                  <span className="font-['Inter'] text-xs sm:text-sm tracking-wide">
+                    Learn more
+                  </span>
+                  <span className="text-sm sm:text-base md:text-lg transform group-hover:translate-x-1 transition-transform duration-300">
                     →
                   </span>
                 </Link>
               </div>
             </motion.div>
 
-            {/* Right Image - Below text on mobile, right on desktop */}
+            {/* Right Image */}
             <motion.div
               initial={{ opacity: 0, scale: 0.95 }}
               animate={
@@ -389,27 +405,29 @@ function VentureSlide({ venture, isActive, index }: VentureSlideProps) {
                   : { opacity: 0, scale: 0.95 }
               }
               transition={{ duration: 0.6, delay: 0.15 }}
-              className="relative w-full max-w-xs sm:max-w-sm md:max-w-md mx-auto md:mx-0 h-[180px] sm:h-[220px] md:h-[280px] lg:h-[320px] xl:h-[360px] rounded-lg overflow-hidden"
+              className="relative w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl mx-auto lg:mx-0"
             >
-              <div className="absolute inset-0 rounded-lg border border-white/10 z-10" />
+              <div className="relative aspect-[4/3] rounded-lg overflow-hidden">
+                <div className="absolute inset-0 rounded-lg border border-white/10 z-10" />
 
-              <div className="absolute inset-[2px] rounded-lg overflow-hidden">
-                <Image
-                  src={venture.image}
-                  alt={venture.title}
-                  fill
-                  className="object-cover"
-                  priority={index === 0}
-                  sizes="(max-width: 640px) 90vw, (max-width: 768px) 80vw, (max-width: 1024px) 40vw, 35vw"
+                <div className="absolute inset-[2px] rounded-lg overflow-hidden">
+                  <Image
+                    src={venture.image}
+                    alt={venture.title}
+                    fill
+                    className="object-cover"
+                    priority={index === 0}
+                    sizes="(max-width: 640px) 320px, (max-width: 768px) 384px, (max-width: 1024px) 448px, 512px"
+                  />
+                </div>
+
+                <div
+                  className="absolute inset-0 opacity-10"
+                  style={{
+                    background: `linear-gradient(135deg, ${venture.themeColor} 0%, transparent 100%)`,
+                  }}
                 />
               </div>
-
-              <div
-                className="absolute inset-0 opacity-10"
-                style={{
-                  background: `linear-gradient(135deg, ${venture.themeColor} 0%, transparent 100%)`,
-                }}
-              />
             </motion.div>
           </div>
         </div>
