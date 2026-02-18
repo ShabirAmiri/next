@@ -201,7 +201,7 @@ export default function BusinessVentures() {
       {/* Section Title - Clean and minimal */}
       <div className="absolute top-4 sm:top-6 md:top-8 left-1/2 -translate-x-1/2 z-20 text-center w-full px-4">
         <h2 className="font-['Inter'] text-white/20 text-[8px] sm:text-[10px] md:text-xs tracking-[0.4em] uppercase font-light">
-          ENTERPRISES
+          ENTERPRISES Test
         </h2>
       </div>
 
